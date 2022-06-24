@@ -280,7 +280,11 @@ static int __init spi_gpio_custom_add_one(unsigned int id, unsigned int *params)
 		err = -EINVAL;
 		goto err;
 	}
+#if LINUX_VERSION_CODE >= KERNEL_VERSION(5, 5, 0)
+	gpiod_table->table[0].key = chip_sck->label;
+#else
 	gpiod_table->table[0].chip_label = chip_sck->label;
+#endif
 	gpiod_table->table[0].chip_hwnum = params[BUS_PARAM_SCK] - chip_sck->base;
 
 	if (params[BUS_PARAM_MOSI]) {
@@ -290,11 +294,19 @@ static int __init spi_gpio_custom_add_one(unsigned int id, unsigned int *params)
 			err = -EINVAL;
 			goto err;
 		}
+#if LINUX_VERSION_CODE >= KERNEL_VERSION(5, 5, 0)
+		gpiod_table->table[1].key = chip_mosi->label;
+#else
 		gpiod_table->table[1].chip_label = chip_mosi->label;
+#endif
 		gpiod_table->table[1].chip_hwnum = params[BUS_PARAM_MOSI] - chip_mosi->base;
 		gpiod_table->table[1].con_id = "mosi";
 	} else {
+#if LINUX_VERSION_CODE >= KERNEL_VERSION(5, 5, 0)
+		gpiod_table->table[1].key = "mosi-stub-chip";
+#else
 		gpiod_table->table[1].chip_label = "mosi-stub-chip";
+#endif
 		gpiod_table->table[1].con_id = "mosi-stub";
 	}
 
@@ -305,11 +317,19 @@ static int __init spi_gpio_custom_add_one(unsigned int id, unsigned int *params)
 			err = -EINVAL;
 			goto err;
 		}
+#if LINUX_VERSION_CODE >= KERNEL_VERSION(5, 5, 0)
+		gpiod_table->table[2].key = chip_miso->label;
+#else
 		gpiod_table->table[2].chip_label = chip_miso->label;
+#endif
 		gpiod_table->table[2].chip_hwnum = params[BUS_PARAM_MISO] - chip_miso->base;
 		gpiod_table->table[2].con_id = "miso";
 	} else {
+#if LINUX_VERSION_CODE >= KERNEL_VERSION(5, 5, 0)
+		gpiod_table->table[2].key = "miso-stub-chip";
+#else
 		gpiod_table->table[2].chip_label = "miso-stub-chip";
+#endif
 		gpiod_table->table[2].con_id = "miso-stub";
 	}
 
@@ -326,11 +346,19 @@ static int __init spi_gpio_custom_add_one(unsigned int id, unsigned int *params)
 				err = -EINVAL;
 				goto err;
 			}
+#if LINUX_VERSION_CODE >= KERNEL_VERSION(5, 5, 0)
+			gpiod_table->table[3 + i].key = chip_cs->label;
+#else
 			gpiod_table->table[3 + i].chip_label = chip_cs->label;
+#endif
 			gpiod_table->table[3 + i].chip_hwnum = cs_gpio - chip_cs->base;
 			gpiod_table->table[3 + i].con_id = "cs";
 		} else {
+#if LINUX_VERSION_CODE >= KERNEL_VERSION(5, 5, 0)
+			gpiod_table->table[3 + i].key = "cs-stub-chip";
+#else
 			gpiod_table->table[3 + i].chip_label = "cs-stub-chip";
+#endif
 			gpiod_table->table[3 + i].con_id = "cs-stub";
 		}
 	}
